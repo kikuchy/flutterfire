@@ -97,6 +97,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    removeAuthStateListeners();
     authStateListeners = null;
     forceResendingTokens = null;
     channel.setMethodCallHandler(null);
@@ -220,6 +221,13 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       default:
         result.notImplemented();
         break;
+    }
+  }
+
+  private void removeAuthStateListeners() {
+    for (int i = 0; i < authStateListeners.size(); i++) {
+      // TODO: app名なしのAuthにしか作用できない
+      FirebaseAuth.getInstance().removeAuthStateListener(authStateListeners.valueAt(i));
     }
   }
 
